@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './login-view.scss';
 import { Form, Button, Container, Row, Col, Card, CardGroup } from 'react-bootstrap';
+import axios from 'axios';
 
 export function LoginView(props) {
     const [ username, setUsername ] = useState('');
@@ -9,10 +10,20 @@ export function LoginView(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(username, password);
+        axios.post('https://agile-badlands-90637.herokuapp.com/login', {
+            Username: jondoe1,
+            Password: passcode1
+        })
+        .then(response => {
+            const data = response.data;
+            props.onLoggedIn(data);
+        })
+        .catch(e => {
+            console.log('no such user');
+        });
+       
         /* Send a request to the server for authentication */
         /* then call props.onLoggedIn(username) */
-        props.onLoggedIn(username);
     };
 
     return (

@@ -1,0 +1,66 @@
+:root {
+    --background-color: #ECF0F1;
+    --input-color: #F9E907;
+    --text-color: #2d7894;
+    --primary-color: #4cbb87;
+    --link-color: #9b67ee;
+    --visited-link-color: #a84c8d;
+    --active-link-color: #d3355a;
+    --button-color: #ff7f50;
+    --header-color: #018591;
+    --main-font-size: 14px;
+    --padding: 3rem;
+    --margin: 5rem;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: var(--main-font-size);
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: 300%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: var(--padding);
+    margin: var(--margin);
+  }
+  
+  h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--header-color);
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-align: center;
+  }
+  
+  p {
+    font-size: var(--main-font-size);
+    font-weight: 300;
+    color: var(--primary-color);
+    overflow-wrap: break-word;
+  }
+  
+  /* this is the button */
+  button {
+    position: center;
+    border: none;
+    width: 100px;
+    background: #dfdfdf;
+    color: #5dc8d6;
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+    cursor: pointer;
+  }

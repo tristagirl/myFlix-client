@@ -1,4 +1,10 @@
 import React from 'react';
+<<<<<<< Updated upstream
+=======
+// import PropTypes from 'prop-types';
+
+import '.movie-view.scss';
+>>>>>>> Stashed changes
 
 export class MovieView extends React.Component {
 
@@ -30,4 +36,9 @@ export class MovieView extends React.Component {
        </div>
     );
   }
+<<<<<<< Updated upstream
 }
+=======
+}
+
+>>>>>>> Stashed changes

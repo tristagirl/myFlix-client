@@ -11,8 +11,8 @@ export function LoginView(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post('https://agile-badlands-90637.herokuapp.com/login', {
-            Username: jondoe1,
-            Password: passcode1
+            Username: myFlixadmin,
+            Password: F01UBZlQU2VYwAez
         })
         .then(response => {
             const data = response.data;

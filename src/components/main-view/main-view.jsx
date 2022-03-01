@@ -97,16 +97,8 @@ export class MainView extends React.Component {
                             onBackClick={() => history.goBack()}
                             movies={movies.filter(movie => movie.Director.Name === match.params.name)} />} /></>
                         }/>
-
                     </Row>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 </Container>
-            </Router>
-        );
-    }
-}
-=======
                   </Router>
             
                 );
@@ -120,19 +112,3 @@ let mapStateToProps = state => {
             
 export default connect(mapStateToProps, { setMovies, setUser })(MainView);
             
->>>>>>> Stashed changes
-=======
-                  </Router>
-            
-                );
-              }
-            
-            }
-            
-let mapStateToProps = state => {
-    return { movies: state.movies, user: state.user }
-}
-            
-export default connect(mapStateToProps, { setMovies, setUser })(MainView);
-            
->>>>>>> Stashed changes

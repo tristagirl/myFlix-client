@@ -123,3 +123,4 @@ RegistrationView.propTypes = {
     }),
     onRegistration: PropTypes.func,
 };
+

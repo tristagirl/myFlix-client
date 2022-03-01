@@ -1,7 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
+
+import { setMoviews } from '../../actions/actions';
+import MoviesList from '../movies-list/movies-list';
 import './main-view.scss';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';

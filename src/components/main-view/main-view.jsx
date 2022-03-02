@@ -118,7 +118,22 @@ export class MainView extends React.Component {
                         <Route exact path="/" element = {<this.RenderMovies movies={movies}/> } />
                         <Route exact path="/login" element={<this.RenderLogin user={user} movies={movies} />} />
                         <Route exact path="/register" element={<this.RenderRegister />} />
-                        {/* <Route path="/movies/:movieId" render={({ match, history }) => {
+                        <Route path="/profile" render={({ history }) => {
+                            if (!user) {
+                                return (
+                                    <Col>
+                                        <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
+                                    </Col>
+                                );
+                            }
+
+                            return (
+                                <Col md={8}>
+                                    <ProfileView movies={movies} onBackClick={() => history.goBack()} />
+                                </Col>
+                            );
+                        }} />
+                         <Route path="/movies/:movieId" render={({ match, history }) => {
                             if (!user) {
                                 return (
                                     <Col>
@@ -136,21 +151,6 @@ export class MainView extends React.Component {
                                     <MovieView
                                         movie={movies.find(m => m._id === match.params.movieId)}
                                         onBackClick={() => history.goBack()} />
-                                </Col>
-                            );
-                        }} />
-                        <Route path="/profile" render={({ history }) => {
-                            if (!user) {
-                                return (
-                                    <Col>
-                                        <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
-                                    </Col>
-                                );
-                            }
-
-                            return (
-                                <Col md={8}>
-                                    <ProfileView movies={movies} onBackClick={() => history.goBack()} />
                                 </Col>
                             );
                         }} />
@@ -196,7 +196,7 @@ export class MainView extends React.Component {
                                         movies={movies.filter(movie => movie.Director.Name === match.params.name)} />
                                 </Col>
                             );
-                        }} /> */}
+                        }} /> 
                         </Routes>
                     </Row>
                 </Container>

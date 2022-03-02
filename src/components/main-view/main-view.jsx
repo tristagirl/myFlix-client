@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { setMoviews } from '../../actions/actions';
@@ -74,6 +74,38 @@ export class MainView extends React.Component {
             });
     }
 
+    RenderMovies = ({user, movies}) => {
+        if (!user) {
+            window.location.replace("/login")
+        }
+
+        return (
+            <>
+                {movies.map(movie => (
+                    <Col md={3} key={movie._id}>
+                        <MovieCard movie={movie} onMovieClick={() => {}} />
+                    </Col>
+                ))}
+            </>
+        );
+    };
+
+    RenderLogin = ({user}) => {
+        console.log(user)
+        if (user) {
+           window.location.replace("/")
+        }
+        return <LoginView onLoggedIn={(data) => this.onLoggedIn(data)} />
+    }
+
+    RenderRegister = () => {
+        return (
+            <Col>
+                <RegistrationView />
+            </Col>
+        );
+    }
+
     render() {
         const { movies, user } = this.state;
 
@@ -82,40 +114,11 @@ export class MainView extends React.Component {
                 <NavbarView user={user} />
                 <Container>
                     <Row className="main-view justify-content-md-center">
-                        <Route exact path="/" render={() => {
-                            if (!user) {
-                                return <Redirect to="/login" />;
-                            }
-
-                            return (
-                                <>
-                                    {movies.map(movie => (
-                                        <Col md={3} key={movie._id}>
-                                            <MovieCard movie={movie} onMovieClick={() => {}} />
-                                        </Col>
-                                    ))}
-                                </>
-                            );
-                        }} />
-                        <Route path="/login" render={() => {
-                            if (user) {
-                                return <Redirect to="/" />;
-                            }
-
-                            return <LoginView onLoggedIn={(data) => this.onLoggedIn(data)} />
-                        }} />
-                        <Route path="/register" render={() => {
-                            if (user) {
-                                return <Redirect to="/" />;
-                            }
-
-                            return (
-                                <Col>
-                                    <RegistrationView />
-                                </Col>
-                            );
-                        }} />
-                        <Route path="/movies/:movieId" render={({ match, history }) => {
+                        <Routes>
+                        <Route exact path="/" element = {<this.RenderMovies movies={movies}/> } />
+                        <Route exact path="/login" element={<this.RenderLogin user={user} movies={movies} />} />
+                        <Route exact path="/register" element={<this.RenderRegister />} />
+                        {/* <Route path="/movies/:movieId" render={({ match, history }) => {
                             if (!user) {
                                 return (
                                     <Col>
@@ -193,7 +196,8 @@ export class MainView extends React.Component {
                                         movies={movies.filter(movie => movie.Director.Name === match.params.name)} />
                                 </Col>
                             );
-                        }} />
+                        }} /> */}
+                        </Routes>
                     </Row>
                 </Container>
             </Router>

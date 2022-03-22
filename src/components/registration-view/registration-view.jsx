@@ -5,7 +5,7 @@ import './registration-view.scss';
 import { Link } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Card, CardGroup } from 'react-bootstrap';
 
-export function RegistrationView(props) {
+export default function RegistrationView(props) {
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ email, setEmail ] = useState('');

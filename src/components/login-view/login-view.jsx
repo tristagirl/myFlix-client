@@ -40,7 +40,7 @@ export function LoginView(props) {
         const isReq = validate();
         if(isReq) {
             /* Send request to the server for authentication */
-            axios.post(`https://agile-badlands-90637.herokuapp.com/login`, {
+            axios.post(`https://enigmatic-atoll-33732.herokuapp.com/login`, {
                 Username: username,
                 Password: password
             })

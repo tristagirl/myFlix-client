@@ -5,7 +5,7 @@ import './registration-view.scss';
 import { Link } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Card, CardGroup } from 'react-bootstrap';
 
-export function RegistrationView(props) {
+export default function RegistrationView(props) {
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ email, setEmail ] = useState('');
@@ -50,7 +50,7 @@ export function RegistrationView(props) {
         const isReq = validate();
         if(isReq) {
             /* Send request to the server for authentication */
-            axios.post('https://agile-badlands-90637.herokuapp.com/users', {
+            axios.post('https://enigmatic-atoll-33732.herokuapp.com/users', {
                 Username: username,
                 Password: password,
                 Email: email,

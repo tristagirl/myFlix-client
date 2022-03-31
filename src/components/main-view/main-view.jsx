@@ -78,12 +78,16 @@ export class MainView extends React.Component {
   };
 
 
-  renderDirector = ({ match, history }) => {
+  renderDirector = ({movies}) => {
+    const directorNAME = window.location.href.split("/directors/")[1].replace("%20", " ");
+    const director = movies.find(m => m.Director.Name === directorNAME).Director;
+    console.log(directorNAME)
+    console.log(director)
     if (!localStorage.getItem('user')) return <Col>
       <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
     </Col>
     return <Col md={8}>
-      <DirectorView director={movies.find(m => m.Director.Name === match.params.name).Director} onBackClick={() => history.goBack()} />
+      <DirectorView director={director} onBackClick={() => window.location.replace("/")} />
     </Col>
   }
 
@@ -96,17 +100,18 @@ export class MainView extends React.Component {
     ))
   }
 
-  renderGenre = ({ user, movies }) => {
-    console.log(movies)
-    console.log(window.location.href.split("/genres/")[1])
-    const genre = movies.find(m => m.Genre.Name == window.location.href.split("/genres/")[1]);
-    if (!user) return <Col>
+  renderGenre = ({movies}) => {
+    const directorNAME = window.location.href.split("/genres/")[1].replace("%20", " ");
+    const director = movies.find(m => m.Genre.Name === directorNAME).Genre;
+    console.log(directorNAME)
+    console.log(director)
+    if (!localStorage.getItem('user')) return <Col>
       <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
     </Col>
     return <Col md={8}>
-      <GenreView genre={genre} onBackClick={() => history.goBack()} />
+      <GenreView genre={director} onBackClick={() => window.location.replace("/")} />
     </Col>
-  };
+  }
 
   render() {
     const { movies, user } = this.state;
@@ -143,7 +148,7 @@ export class MainView extends React.Component {
           <Route exact path="/register" element={<RegistrationView />}/>
           <Route exact path="/login" element={<LoginView onLoggedIn={(data) => this.onLoggedIn(data)}/>}  />                         
           <Route exact path="/movies/:movieId" element={<this.renderMovie movies={movies} />} />
-          <Route exact path="/directors/:name" element={<this.renderDirector />} />
+          <Route exact path="/directors/:name" element={<this.renderDirector  movies={movies} />} />
 
           <Route exact path="/genres/:name" element={<this.renderGenre movies={movies} user={user} />} />
 

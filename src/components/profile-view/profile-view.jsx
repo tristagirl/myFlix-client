@@ -1,304 +1,117 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import './profile-view.scss';
+import '../registration-view/registration-view.scss';
 import { Link } from 'react-router-dom';
-import { Container, Card, Button, Row, Col, Form } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Card, CardGroup } from 'react-bootstrap';
 
-export class ProfileView extends React.Component {
-    constructor() {
-        super();
+export default function ProfileView() {
+    const [ username, setUsername ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [ email, setEmail ] = useState('');
+    const [ birthday, setBirthday ] = useState('');
 
-        this.state = {
-            Username: null,
-            Password: null,
-            Email: null,
-            Birthday: null,
-            FavoriteMovies: [],
-        };
-    }
+    // Declare hook for each input
+    const [ usernameErr, setUsernameErr ] = useState('');
+    const [ passwordErr, setPasswordErr ] = useState('');
+    const [ emailErr, setEmailErr ] = useState('');
 
-    componentDidMount() {
-        const accessToken = localStorage.getItem('token');
-        this.getUser(accessToken);
-    }
+    // validate user inputs
+    const validate = () => {
+        let isReq = true;
 
-    onLoggedOut() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        this.setState({
-            user: null,
-        });
-        window.open('/', '_self');
-    }
-
-    getUser = (token) => {
-        const Username = localStorage.getItem('user');
-        axios
-            .get(`https://enigmatic-atoll-33732.herokuapp.com/users/${Username}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                this.setState({
-                    Username: response.data.Username,
-                    Password: response.data.Password,
-                    Email: response.data.Email,
-                    Birthday: response.data.Birthday,
-                    FavoriteMovies: response.data.FavoriteMovies,
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-    // Allow user to edit or update profile
-    editUser = (e) => {
-        e.preventDefault();
-        const Username = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
-
-        axios
-            .put(
-                `https://enigmatic-atoll-33732.herokuapp.com/users/${Username}`,
-                {
-                    Username: this.state.Username,
-                    Password: this.state.Password,
-                    Email: this.state.Email,
-                    Birthday: this.state.Birthday,
-                },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            )
-            .then((response) => {
-                this.setState({
-                    Username: response.data.Username,
-                    Password: response.data.Password,
-                    Email: response.data.Email,
-                    Birthday: response.data.Birthday,
-                });
-
-                localStorage.setItem('user', this.state.Username);
-                alert("Profile updated");
-                window.open('/profile', '_self');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
-    // Delete a movie from FavoriteMovies list
-    onRemoveFavorite = (e, movie) => {
-        e.preventDefault();
-        const Username = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
-
-        axios
-            .delete(
-                `https://enigmatic-atoll-33732.herokuapp.com/users/${Username}/movies/${movie._id}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            )
-            .then((response) => {
-                console.log(response);
-                alert("Movie removed");
-                this.componentDidMount();
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
-    // Deregister
-    onDeleteUser() {
-        const Username = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
-
-        axios
-            .delete(`https://enigmatic-atoll-33732.herokuapp.com/users/${Username}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                console.log(response);
-                alert("Profile deleted");
-                localStorage.removeItem('user');
-                localStorage.removeItem('token');
-                window.open('/', '_self');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    setUsername(value) {
-        this.setState({
-            Username: value,
-        });
-    }
-
-    setPassword(value) {
-        this.setState({
-            Password: value,
-        });
-    }
-
-    setEmail(value) {
-        this.setState({
-            Email: value,
-        });
-    }
-
-    setBirthday(value) {
-        this.setState({
-            Birthday: value,
-        });
-    }
-
-    render() {
-        const { movies, onBackClick } = this.props;
-        const { FavoriteMovies, Username, Email, Birthday } = this.state;
-
-        if (!Username) {
-            return null;
+        if(!username){
+            setUsernameErr('Username required');
+            isReq = false;
+        }else if(username.length < 2){
+            setUsernameErr('Username must be at least 2 characters long');
+            isReq = false;
+        }
+        if(!password){
+            setPasswordErr('Password required');
+            isReq = false;
+        }else if(password.length < 6){
+            setPassword('Password must be at least 6 characters long');
+            isReq = false;
+        }
+        if(!email){
+            setEmailErr('Email required');
+            isReq = false;
+        }else if(email.indexOf('@') === -1){
+            setEmail('Email must be valid');
+            isReq = false;
         }
 
-        return (
-            <Container className="profile-view" align="center">
-                <Row>
-                    <Col>
-                        <Card className="update-profile">
+        return isReq;
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const isReq = validate();
+        if(isReq) {
+            /* Send request to the server for authentication */
+            axios.put('https://enigmatic-atoll-33732.herokuapp.com/users/'+localStorage.getItem("user"), {
+                Username: username,
+                Password: password,
+                Email: email,
+                Birthday: birthday,
+            })
+                .then(response => {
+                    const data = response.data;
+                    console.log(data);
+                    alert('Pofile udated successfully!');
+                    window.open('/', '_self');
+                })
+                .catch(response => {
+                    console.error(response);
+                    alert('Unable to update profile');
+                });
+        }
+    };
+
+    return (
+        <Container>
+            <Row>
+                <Col>
+                    <CardGroup>
+                        <Card>
                             <Card.Body>
-                                <Card.Title>Profile</Card.Title>
-                                <Form
-                                    className="update-form"
-                                    onSubmit={(e) =>
-                                        this.editUser(
-                                            e,
-                                            this.Username,
-                                            this.Password,
-                                            this.Email,
-                                            this.Birthday
-                                        )
-                                    }
-                                >
-                                    <Form.Group>
-                                        <Form.Label>Username</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="Username"
-                                            placeholder="New Username"
-                                            value={Username}
-                                            onChange={(e) => this.setUsername(e.target.value)}
-                                            required
-                                        />
+                                <Card.Title>Register now!</Card.Title>
+                                <Form>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Username:</Form.Label>
+                                        <Form.Control type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username" />
+                                        {/* code added here to display validation error */}
+                                        {usernameErr && <p>{usernameErr}</p>}
                                     </Form.Group>
 
-                                    <Form.Group>
-                                        <Form.Label>Password</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="Password"
-                                            placeholder="New Password"
-                                            value={""}
-                                            onChange={(e) => this.setPassword(e.target.value)}
-                                            required
-                                        />
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Password:</Form.Label>
+                                        <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} minLength="8" placeholder="Your password must be 8 or more characters" />
+                                        {/* code added here to display validation error */}
+                                        {passwordErr && <p>{passwordErr}</p>}
                                     </Form.Group>
 
-                                    <Form.Group>
-                                        <Form.Label>Email</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            name="Email"
-                                            placeholder="Enter Email"
-                                            value={Email}
-                                            onChange={(e) => this.setEmail(e.target.value)}
-                                            required
-                                        />
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Email:</Form.Label>
+                                        <Form.Control type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter email" />
+                                        {/* code added here to display validation error */}
+                                        {emailErr && <p>{emailErr}</p>}
                                     </Form.Group>
 
-                                    <Form.Group>
-                                        <Form.Label>Birthday</Form.Label>
-                                        <Form.Control
-                                            type="date"
-                                            name="Birthday"
-                                            value={Birthday}
-                                            onChange={(e) => this.setBirthday(e.target.value)}
-                                        />
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Birthday:</Form.Label>
+                                        <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)} placeholder="Enter birthday" />
                                     </Form.Group>
-                                    <div className="mt-3">
-                                        <Button variant="success" type="submit" onClick={this.editUser}>Update User</Button>
-                                        <Button className="ml-3" variant="secondary" onClick={() => this.onDeleteUser()}>Delete User</Button>
-                                    </div>
+
+                                    <Button variant="outline-light" type="submit" onClick={handleSubmit}>Submit</Button>
                                 </Form>
                             </Card.Body>
                         </Card>
-                    </Col>
-                </Row>
-                <Row style={{ marginTop: "20px" }}>
-                    <Col>
-                        <h4>{Username} Favorite Movies</h4>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Card.Body>
-                            {FavoriteMovies.length === 0 && (
-                                <div className="text-center">No Favorite Movies</div>
-                            )}
-                            <Row className="favorite-container">
-                                {FavoriteMovies.length > 0 &&
-                                    movies.map((movie) => {
-                                        if (
-                                            movie._id ===
-                                            FavoriteMovies.find((fav) => fav === movie._id)
-                                        ) {
-                                            return (
-                                                <Card className="favorite-movie card-content" key={movie._id} >
-                                                    <Card.Img
-                                                        className="fav-poster"
-                                                        variant="top"
-                                                        src={movie.ImagePath}
-                                                    />
-                                                    <Card.Body style={{ backgroundColor: "black" }}>
-                                                        <Card.Title className="movie_title">
-                                                            {movie.Title}
-                                                        </Card.Title>
-                                                        <Button size="sm" variant="danger" value={movie._id} onClick={(e) => this.onRemoveFavorite(e, movie)}>Remove</Button>
-                                                    </Card.Body>
-                                                </Card>
-                                            );
-                                        }
-                                    })}
-                            </Row>
-                        </Card.Body>
-                    </Col>
-                </Row>
-                <div className="backButton">
-                    <Button variant="outline-primary" onClick={() => { onBackClick(null); }}>Back</Button>
-                </div>
-                <br />
-            </Container>
-        );
-    }
+                    </CardGroup>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
 
-ProfileView.propTypes = {
-    movies: PropTypes.arrayOf(PropTypes.shape({
-        Title: PropTypes.string.isRequired,
-        Description: PropTypes.string.isRequired,
-        ImagePath: PropTypes.string.isRequired,
-        Genre: PropTypes.shape({
-            Name: PropTypes.string.isRequired,
-            Description: PropTypes.string.isRequired,
-        }).isRequired,
-        Director: PropTypes.shape({
-            Bio: PropTypes.string.isRequired,
-            Birth: PropTypes.string.isRequired,
-            Death: PropTypes.string.isRequired,
-            Name: PropTypes.string.isRequired,
-        }).isRequired,
-    })).isRequired,
-    onBackClick: PropTypes.func.isRequired
-};

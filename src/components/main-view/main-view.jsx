@@ -149,10 +149,10 @@ export class MainView extends React.Component {
           <Route exact path="/login" element={<LoginView onLoggedIn={(data) => this.onLoggedIn(data)}/>}  />                         
           <Route exact path="/movies/:movieId" element={<this.renderMovie movies={movies} />} />
           <Route exact path="/directors/:name" element={<this.renderDirector  movies={movies} />} />
-
+          <Route exact path="/users/:Username" element={<ProfileView />} />
           <Route exact path="/genres/:name" element={<this.renderGenre movies={movies} user={user} />} />
 
-          <Route exact path="/profile" element={({ history }) => {
+          <Route exact path="/profile" element={() => {
             if (!user) {
               return (
                 <Col>
@@ -163,7 +163,7 @@ export class MainView extends React.Component {
 
             return (
               <Col md={8}>
-                <ProfileView movies={movies} onBackClick={() => history.goBack()} />
+                <ProfileView movies={movies} onBackClick={() => window.location.replace("/")} />
               </Col>
             );
           }} />
@@ -183,19 +183,8 @@ export class MainView extends React.Component {
             );
           }} />
 
-          <Route path="/users/:Username" element={({ match, history }) => {
-            if (!user) return <Redirect to="/" />;
-            <Col>
-              <LoginView onLoggedIn={(data) => this.onLoggedIn(data)} />
-            </Col>
-            if (movies.length === 0) {
-              return <div className="main-view" />;
-            }
-            return <Col md={8}>
-              <ProfileView history={history} movies={movies} user={user === match.params.username} />
+         
 
-            </Col>
-          }} />
       </Routes>
         </Row>
       </Router>

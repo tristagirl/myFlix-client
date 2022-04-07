@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import '../registration-view/registration-view.scss';
 import { Link } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Card, CardGroup } from 'react-bootstrap';
 
-export default function ProfileView() {
+export default function ProfileView(props) {
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ email, setEmail ] = useState('');
@@ -16,6 +16,20 @@ export default function ProfileView() {
     const [ passwordErr, setPasswordErr ] = useState('');
     const [ emailErr, setEmailErr ] = useState('');
 
+    useEffect(()=>{
+      axios.get("https://enigmatic-atoll-33732.herokuapp.com/users/"+localStorage.getItem('user'), {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+        .then(response => {
+          // Assign the result to the state
+         setBirthday(response.data.Birthday)
+         setEmail(response.data.Email)
+         setUsername(response.data.Username)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },[])
     // validate user inputs
     const validate = () => {
         let isReq = true;
@@ -55,12 +69,17 @@ export default function ProfileView() {
                 Password: password,
                 Email: email,
                 Birthday: birthday,
+            },
+            {
+              headers: {
+                Authorization: 'Bearer '+localStorage.getItem('token')
+              }
             })
                 .then(response => {
                     const data = response.data;
                     console.log(data);
                     alert('Pofile udated successfully!');
-                    window.open('/', '_self');
+                   
                 })
                 .catch(response => {
                     console.error(response);
@@ -76,7 +95,7 @@ export default function ProfileView() {
                     <CardGroup>
                         <Card>
                             <Card.Body>
-                                <Card.Title>Register now!</Card.Title>
+                                <Card.Title>Update Profile!</Card.Title>
                                 <Form>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Username:</Form.Label>

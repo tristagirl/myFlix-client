@@ -8,7 +8,7 @@ import { MovieView } from "../movie-view/movie-view";
 import { DirectorView } from "../director-view/director-view";
 import { GenreView } from "../genre-view/genre-view";
 import RegistrationView from "../registration-view/registration-view";
-import { ProfileView } from "../profile-view/profile-view";
+import ProfileView from "../profile-view/profile-view";
 import { NavbarView } from '../navbar-view/navbar-view';
 import { Row, Col, Navbar, Button } from "react-bootstrap";
 export class MainView extends React.Component {
@@ -149,7 +149,7 @@ export class MainView extends React.Component {
           <Route exact path="/login" element={<LoginView onLoggedIn={(data) => this.onLoggedIn(data)}/>}  />                         
           <Route exact path="/movies/:movieId" element={<this.renderMovie movies={movies} />} />
           <Route exact path="/directors/:name" element={<this.renderDirector  movies={movies} />} />
-          <Route exact path="/users/:Username" element={<ProfileView />} />
+          <Route exact path="/users/:username" element={<ProfileView />} />
           <Route exact path="/genres/:name" element={<this.renderGenre movies={movies} user={user} />} />
 
           <Route exact path="/profile" element={() => {
